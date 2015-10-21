@@ -644,6 +644,12 @@ class ProfilesMetadataManifestBuilder {
             Package(xmlns: 'http://soap.sforce.com/2006/04/metadata') {
                 types {
                     fileProperties.each { fp ->
+                        // quick hack in order to resolve issues with namespace and layouts
+                        if(fp.type == 'Layout' && null != fp.namespacePrefix)     {
+                                        def layoutName = fp.fullName
+                                        def namespace = fp.namespacePrefix + '__'
+                                        fp.fullName = fp.fullName.substring(0,fp.fullName.indexOf('-')+1) + namespace + fp.fullName.substring(fp.fullName.indexOf('-') + 1)
+                        }
                         members fp.fullName
                     }
 
